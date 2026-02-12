@@ -3,7 +3,7 @@ const { DDB } = require("./ddb")
 
 const testSecret = async () => {
     try {
-        const secret = await getSecret()?.secret
+        const secret = await getSecret()
         return {
             host: secret?.host,
             port: secret?.port,

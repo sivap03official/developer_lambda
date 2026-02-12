@@ -1,9 +1,12 @@
-const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBClient, QueryCommand } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
 
 class DDB {
     constructor() {
         this.client = new DynamoDBClient({ region: "ap-south-1" });
+        if (!this.client) {
+            throw new Error("Failed to create DynamoDB client");
+        }
         this.docClient = DynamoDBDocumentClient.from(this.client);
     }
 
@@ -34,6 +37,7 @@ class DDB {
         try {
             const data = await this.docClient.send(new QueryCommand(params));
             console.log("Query Results:", data.Items);
+            return data.Items;
         } catch (err) {
             console.error(err);
         }

@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.988.0",
     "axios": "^1.13.5",
     "serverless": "^4.31.2"
   }

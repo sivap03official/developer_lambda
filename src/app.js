@@ -1,7 +1,11 @@
+const { getSecret } = require("./awsUtil")
+
 const get = async (event) => {
     switch (getPath(event)) {
         case "/hello":
             return { message: "Hello, world!" }
+        case "/secret":
+            return { secret: await getSecret() }
         default: throw new Error(`Unsupported path: ${getPath(event)}`)
     }
 }

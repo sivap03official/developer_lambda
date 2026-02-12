@@ -1,5 +1,5 @@
-const { DynamoDBClient, QueryCommand } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 class DDB {
     constructor() {
@@ -29,15 +29,14 @@ class DDB {
     async queryItems() {
         const params = {
             TableName: "user",
-            KeyConditionExpression: "email = :id",
-            ExpressionAttributeValues: {
-                ":id": "john@example.com",
-            },
+            Key: {
+                email: "john@example.com"
+            }
         };
         try {
-            const data = await this.docClient.send(new QueryCommand(params));
-            console.log("Query Results:", data.Items);
-            return data.Items;
+            const data = await this.docClient.send(new GetCommand(params));
+            console.log("Query Results:", data.Item);
+            return data;
         } catch (err) {
             console.error(err);
         }

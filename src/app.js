@@ -1,4 +1,5 @@
 const { getSecret } = require("./awsUtil")
+const { DDB } = require("./ddb")
 
 const testSecret = async () => {
     try {

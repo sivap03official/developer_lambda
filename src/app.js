@@ -1,6 +1,22 @@
 const { getSecret } = require("./awsUtil")
-const { initPool } = require("./sqlUtil")
+const { initPool, createTestTable, insertTestData, getAllTestData } = require("./sqlUtil")
 
+const testChanges = async () => {
+    await initPool()
+    const msg = []
+    msg.push("DB pool initialized")
+    try {
+        await createTestTable()
+        msg.push("Test table created")
+        await insertTestData("TestName")
+        msg.push("Test data inserted")
+        const data = await getAllTestData()
+        msg.push(`Test data retrieved: ${JSON.stringify(data)}`)
+    } catch (error) {
+        msg.push(`Error: ${error.message}`)
+    }
+    return msg.join(" | ")
+}
 const get = async (event) => {
     switch (getPath(event)) {
         case "/hello":
@@ -8,7 +24,7 @@ const get = async (event) => {
         case "/secret":
             return { secret: await getSecret() }
         case "/loaddb":
-            return { message: "DB pool initialized", pool: await initPool() }
+            return { message: "DB pool initialized", pool: await testChanges() }
         default: throw new Error(`Unsupported path: ${getPath(event)}`)
     }
 }

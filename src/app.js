@@ -1,4 +1,5 @@
 const { getSecret } = require("./awsUtil")
+const { initPool } = require("./sqlUtil")
 
 const get = async (event) => {
     switch (getPath(event)) {
@@ -6,6 +7,8 @@ const get = async (event) => {
             return { message: "Hello, world!" }
         case "/secret":
             return { secret: await getSecret() }
+        case "/loaddb":
+            return { message: "DB pool initialized", pool: await initPool() }
         default: throw new Error(`Unsupported path: ${getPath(event)}`)
     }
 }

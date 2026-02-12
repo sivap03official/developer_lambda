@@ -6,6 +6,7 @@
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.988.0",
     "axios": "^1.13.5",
+    "mysql2": "^3.17.0",
     "serverless": "^4.31.2"
   }
 }

@@ -17,12 +17,30 @@ const testChanges = async () => {
     }
     return msg.join(" | ")
 }
+
+const testSecret = async () => {
+    try {
+        const secret = await getSecret()?.secret
+        return {
+            host: secret?.host,
+            port: secret?.port,
+            user: secret?.username,
+            password: secret?.password,
+            database: secret?.dbInstanceIdentifier,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0,
+        }
+    } catch (error) {
+        return { error: error.message }
+    }
+}
 const get = async (event) => {
     switch (getPath(event)) {
         case "/hello":
             return { message: "Hello, world!" }
         case "/secret":
-            return { secret: await getSecret() }
+            return await testSecret()
         case "/loaddb":
             return { message: "DB pool initialized", pool: await testChanges() }
         default: throw new Error(`Unsupported path: ${getPath(event)}`)

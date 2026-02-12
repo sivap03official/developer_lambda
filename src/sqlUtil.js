@@ -9,11 +9,11 @@ const initPool = async () => {
     }
     const secret = await getSecret()?.secret || {}
     pool = mysql.createPool({
-        host: secret?.host || process.env.SQL_HOST,
-        port: secret?.port || process.env.SQL_PORT,
-        user: secret?.username || process.env.SQL_USER,
-        password: secret?.password || process.env.SQL_PASSWORD,
-        database: secret?.dbInstanceIdentifier || process.env.SQL_DATABASE,
+        host: secret?.host,
+        port: secret?.port,
+        user: secret?.username,
+        password: secret?.password,
+        database: secret?.dbInstanceIdentifier,
         waitForConnections: true,
         connectionLimit: 10,
         queueLimit: 0,

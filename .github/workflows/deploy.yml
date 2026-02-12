@@ -36,7 +36,7 @@ jobs:
           FUNCTION_NAME: developer_lambda
         run: |
           # Create deployment package
-          zip -r lambda-deployment.zip index.js node_modules/
+          zip -r lambda-deployment.zip index.js src/ node_modules/ -x "src/**/.git*" "node_modules/**/.git*"
           
           # Update function code
           aws lambda update-function-code \

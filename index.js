@@ -1,20 +1,36 @@
-const extract = (event) => {
-    try {
-        return JSON.stringify(event)
-    } catch (e) {
-        return JSON.stringify({ error: e?.message })
-    }
-}
+const { get, post } = require('./src/app')
+
 
 const handler = async (event) => {
-    const response = {
-        statusCode: 200,
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: extract(cors(event)),
-    };
-    return response;
+    let fn = null
+    switch (event?.requestContext?.http?.method?.toUpperCase()) {
+        case "GET":
+            fn = get
+            break
+        case "POST":
+            fn = post
+            break
+        case "DELETE":
+            fn = deleteHandler
+            break
+        case "PATCH":
+            fn = patch
+            break
+        case "PUT":
+            fn = put
+            break
+        case "GET":
+            fn = get
+            break
+        case "OPTIONS":
+            return { statusCode: 204, headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS", "Access-Control-Allow-Headers": "authorization, content-type, host", }, }
+        default:
+            throw new Error(`Unsupported HTTP method: ${event?.requestContext?.http?.method}`)
+    }
+    if (!fn) {
+        throw new Error(`Internal error: No handler found for method ${event?.requestContext?.http?.method}`)
+    }
+    return await fn(cors(event))
 };
 
 const filterHeaders = (event) => {
@@ -45,7 +61,7 @@ const cors = (event) => {
     }
     const method = context?.http?.method
     console.log(`current request id ${context?.requestId}, path: ${context?.http?.path}, method: ${method}`)
-    if (!(method && ["OPTIONS", "GET", "POST", "PUT", "DELETE"].includes(method.toUpperCase()))) {
+    if (!(method && ["OPTIONS", "GET", "POST", "PATCH", "PUT", "DELETE"].includes(method.toUpperCase()))) {
         throw new Error(`Invalid HTTP method: ${method}`)
     }
     event = filterHeaders(event)

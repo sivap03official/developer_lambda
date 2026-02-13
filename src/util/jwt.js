@@ -50,11 +50,11 @@ const isTokenExpired = (token) => {
 }
 
 const createSessionId = () => {
-    return crypto.randomUUID()
+    return crypto.randomBytes(64).toString('hex');
 }
 
 const generateRefreshToken = () => {
-    return crypto.randomBytes(40).toString('hex');
+    return crypto.randomUUID()
 }
 
 module.exports = {

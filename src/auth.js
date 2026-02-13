@@ -13,8 +13,8 @@ const signUp = async (event) => {
         if (!valid) {
             return { statusCode: 400, body: JSON.stringify({ error: "Invalid request body", details: ajv.errors }) }
         }
-        password = await hashPassword(password)
-        await ddbInstance.putItem(USER_TABLE, { email, password, name, mobile })
+        const hashedPassword = await hashPassword(password)
+        await ddbInstance.putItem(USER_TABLE, { email, password: hashedPassword, name, mobile })
         return { statusCode: 201, body: JSON.stringify({ message: "User signed up successfully" }) }
     } catch (error) {
         return { statusCode: 500, body: JSON.stringify({ error: error?.message }) }

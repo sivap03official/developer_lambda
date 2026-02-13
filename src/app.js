@@ -1,4 +1,4 @@
-const { signUp } = require("./auth")
+const { signUp, logIn } = require("./auth")
 const { getSecret } = require("./awsUtil")
 const { DDB } = require("./ddb")
 const { generateToken, decodeToken } = require("./jwt")
@@ -64,6 +64,8 @@ const post = async (event) => {
     switch (getPath(event)) {
         case "/auth/signup":
             return signUp(event)
+        case "/auth/login":
+            return logIn(event)
         default: throw new Error(`Unsupported path: ${getPath(event)}`)
     }
 }

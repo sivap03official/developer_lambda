@@ -1,5 +1,6 @@
 const { getSecret } = require("./awsUtil")
 const { DDB } = require("./ddb")
+const { generateToken } = require("./jwt")
 
 const testSecret = async () => {
     try {
@@ -22,11 +23,23 @@ const testSecret = async () => {
 const testData = async () => {
     try {
         const ddb = new DDB()
-        await ddb.putItem()
-        const data = await ddb.queryItems()
+        await ddb.putItem("user", { email: "john@example.com", name: "John Doe" })
+        const data = await ddb.getItem("user", { email: "john@example.com" })
         return { message: "Data loaded successfully", data }
     } catch (error) {
         return { error: error.message }
+    }
+}
+
+const decode = (event) => {
+    const params = event?.queryStringParameters || {}
+    if (!params?.token) {
+        throw new Error("Missing token query parameter")
+    }
+    try {
+        return { decoded: decodeToken(params.token) }
+    } catch (error) {
+        throw new Error("Invalid token")
     }
 }
 
@@ -38,6 +51,10 @@ const get = async (event) => {
             return await testSecret()
         case "/loaddb":
             return { message: "DB pool initialized", pool: await testData() }
+        case "/generate":
+            return { token: generateToken({ email: "john@example.com" }) }
+        case "/decode":
+            return { decoded: decode(event) }
         default: throw new Error(`Unsupported path: ${getPath(event)}`)
     }
 }

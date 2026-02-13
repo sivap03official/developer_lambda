@@ -1,5 +1,5 @@
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, PutCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
 
 class DDB {
     constructor() {
@@ -10,13 +10,10 @@ class DDB {
         this.docClient = DynamoDBDocumentClient.from(this.client);
     }
 
-    async putItem() {
+    async putItem(table, object) {
         const params = {
-            TableName: "user",
-            Item: {
-                email: "john@example.com",
-                passcode: "123456",
-            },
+            TableName: table,
+            Item: object,
         };
         try {
             await this.docClient.send(new PutCommand(params));
@@ -26,21 +23,31 @@ class DDB {
         }
     };
 
-    async queryItems() {
+    async getItem(table, keyObj) {
         const params = {
-            TableName: "user",
-            Key: {
-                email: "john@example.com"
-            }
+            TableName: table,
+            Key: keyObj
         };
         try {
             const data = await this.docClient.send(new GetCommand(params));
-            console.log("Query Results:", data.Item);
-            return data;
+            return data?.Item || null;
         } catch (err) {
-            console.error(err);
+            throw err;
         }
     };
+
+    async deleteItem(table, key) {
+        const params = {
+            TableName: table,
+            Key: key
+        };
+        try {
+            await this.docClient.send(new DeleteCommand(params));
+            console.log("Item deleted successfully");
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = { DDB }

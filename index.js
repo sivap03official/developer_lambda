@@ -1,8 +1,10 @@
 const { get, post } = require('./src/app')
 
-
 const handler = async (event) => {
     let fn = null
+    if (event?.requestContext?.http?.path?.toLowerCase().includes("favicon.ico")) {
+        return { statusCode: 204, headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS", "Access-Control-Allow-Headers": "authorization, content-type, host", }, }
+    }
     switch (event?.requestContext?.http?.method?.toUpperCase()) {
         case "GET":
             fn = get

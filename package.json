@@ -12,6 +12,7 @@
     "bcrypt": "^6.0.0",
     "fluent-json-schema": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
-    "serverless": "^4.31.2"
+    "serverless": "^4.31.2",
+    "uuid": "^13.0.0"
   }
 }

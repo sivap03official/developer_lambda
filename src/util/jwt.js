@@ -1,6 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const {v4: uuidv4} = require('uuid');
+const v4 = require('uuid');
 const crypto = require('crypto');
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY || '';
@@ -51,7 +51,7 @@ const isTokenExpired = (token) => {
 }
 
 const createSessionId = () => {
-    return uuidv4();
+    return v4();
 }
 
 const generateRefreshToken = () => {

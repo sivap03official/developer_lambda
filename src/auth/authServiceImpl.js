@@ -39,7 +39,7 @@ const logIn = async (event) => {
         }
         //check session id present in cookies
         const cookies = event.headers?.cookie || ''
-        const sessionIdCookie = cookies.split(';').find(cookie => cookie.trim().startsWith('sessionId='))
+        const sessionIdCookie = cookies.split(';').find(cookie => cookie.trim().startsWith('x-auth-session-id='))
         if (sessionIdCookie && sessionIdCookie.split('=')[1]) {
             const sessionIdFromCookie = sessionIdCookie.split('=')[1]
             await ddbInstance.deleteItem(SESSION_TABLE, { sessionId: sessionIdFromCookie })
@@ -51,7 +51,7 @@ const logIn = async (event) => {
         //set cookie header for refresh token
         event.headers['Set-Cookie'] = `refreshToken=${refreshToken}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict`
         //set cookie header for session id
-        event.headers['Set-Cookie'] += `; sessionId=${sessionId}; HttpOnly; Path=/; Max-Age=${2 * 60 * 60}; SameSite=Strict`
+        event.headers['Set-Cookie'] += `x-auth-session-id=${sessionId}; HttpOnly; Path=/; Max-Age=${2 * 60 * 60}; SameSite=Strict`
         return { statusCode: 200, body: JSON.stringify({ message: "Login successful", sessionId, refreshToken }), headers: event.headers }
     } catch (error) {
         return { statusCode: 500, body: JSON.stringify({ error: error?.message }) }

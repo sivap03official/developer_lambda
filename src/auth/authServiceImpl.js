@@ -49,10 +49,11 @@ const logIn = async (event) => {
         const refreshToken = generateRefreshToken()
         await ddbInstance.putItem(SESSION_TABLE, { sessionId, token, refreshToken, expiresAt: (Date.now() + (2 * 60 * 60 * 1000)) })
         //set cookie header for refresh token
-        event.headers['Set-Cookie'] = `refreshToken=${refreshToken}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict`
+        const cookiesToSet = []
+        cookiesToSet.push(`refreshToken=${refreshToken}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict`)
         //set cookie header for session id
-        event.headers['Set-Cookie'] += `x-auth-session-id=${sessionId}; HttpOnly; Path=/; Max-Age=${2 * 60 * 60}; SameSite=Strict`
-        return { statusCode: 200, body: JSON.stringify({ message: "Login successful", sessionId, refreshToken }), headers: event.headers }
+        cookiesToSet.push(`x-auth-session-id=${sessionId}; HttpOnly; Path=/; Max-Age=${2 * 60 * 60}; SameSite=Strict`)
+        return { statusCode: 200, cookies: cookiesToSet, body: JSON.stringify({ message: "Login successful", sessionId, refreshToken }) }
     } catch (error) {
         return { statusCode: 500, body: JSON.stringify({ error: error?.message }) }
     }

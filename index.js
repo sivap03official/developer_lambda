@@ -32,7 +32,11 @@ const handler = async (event) => {
     if (!fn) {
         throw new Error(`Internal error: No handler found for method ${event?.requestContext?.http?.method}`)
     }
-    return await fn(cors(event))
+    try {
+        return await fn(cors(event));
+    } catch (error) {
+        return { statusCode: 500, body: JSON.stringify({ error: error?.message || "Internal Server Error" }) }
+    }
 };
 
 const filterHeaders = (event) => {

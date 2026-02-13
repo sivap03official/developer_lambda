@@ -7,7 +7,10 @@
     "@aws-sdk/client-dynamodb": "^3.988.0",
     "@aws-sdk/client-secrets-manager": "^3.988.0",
     "@aws-sdk/lib-dynamodb": "^3.988.0",
+    "ajv": "^8.17.1",
     "axios": "^1.13.5",
+    "bcrypt": "^6.0.0",
+    "fluent-json-schema": "^6.0.0",
     "jsonwebtoken": "^9.0.3",
     "serverless": "^4.31.2"
   }

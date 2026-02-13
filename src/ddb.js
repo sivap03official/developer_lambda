@@ -17,9 +17,9 @@ class DDB {
         };
         try {
             await this.docClient.send(new PutCommand(params));
-            console.log("Item added successfully");
+            return "Item added successfully";
         } catch (err) {
-            console.error(err);
+            throw err;
         }
     };
 

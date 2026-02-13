@@ -52,7 +52,7 @@ const logIn = async (event) => {
         event.headers['Set-Cookie'] = `refreshToken=${refreshToken}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Strict`
         //set cookie header for session id
         event.headers['Set-Cookie'] += `; sessionId=${sessionId}; HttpOnly; Path=/; Max-Age=${2 * 60 * 60}; SameSite=Strict`
-        return { statusCode: 200, body: JSON.stringify({ message: "Login successful", sessionId, refreshToken }) }
+        return { statusCode: 200, body: JSON.stringify({ message: "Login successful", sessionId, refreshToken }), headers: event.headers }
     } catch (error) {
         return { statusCode: 500, body: JSON.stringify({ error: error?.message }) }
     }

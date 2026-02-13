@@ -33,7 +33,9 @@ const handler = async (event) => {
         throw new Error(`Internal error: No handler found for method ${event?.requestContext?.http?.method}`)
     }
     try {
-        return await fn(cors(event));
+        const eve = await fn(cors(event));
+        console.error(eve)
+        return eve
     } catch (error) {
         return { statusCode: 500, body: JSON.stringify({ error: error?.message || "Internal Server Error" }) }
     }
